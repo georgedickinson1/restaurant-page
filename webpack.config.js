@@ -8,10 +8,16 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
     clean: true,
+    publicPath: "/", // Ensures correct paths for assets during development
   },
   devtool: "eval-source-map",
   devServer: {
-    watchFiles: ["./src/template.html"],
+    static: {
+      directory: path.join(__dirname, "dist"), // Serve static files from the 'dist' directory
+    },
+    watchFiles: ["./src/template.html"], // Watch template changes
+    port: 9000, // Optional: set a specific port number if desired
+    open: true, // Automatically open the browser when the server starts
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -27,7 +33,14 @@ module.exports = {
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: "asset/resource",
-      }
+        generator: {
+          filename: "images/[name][ext]", // Output images to the 'images' folder in 'dist'
+        },
+      },
+      {
+        test: /\.html$/i,
+        loader: "html-loader",
+      },
     ],
   },
 };
